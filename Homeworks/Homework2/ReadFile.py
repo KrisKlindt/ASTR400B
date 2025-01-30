@@ -14,10 +14,10 @@ def Read(filename):
     This functions takes in a file name and organizes the data within the file
     based on the type of data.
     Inputs: 
-        filename: Is the name of the file that is to be opened
+        filename: (string) Is the name of the file that is to be opened
     Returns:
-        time: Is the time in Myr given in the file
-        numParticles: Is the number of particles in the data
+        time: (astropy quantity) Is the time in Myr given in the file
+        numParticles: (float) Is the number of particles in the data
         data: The organized array of data from the file
     """
     

@@ -16,14 +16,14 @@ def ParticleInfo(filename, pType, pNum):
     returns the magnitude of the distance, velocity, and mass of that particle in
     units of kpc, km/s, and solar masses, respectively
     Imputs:
-        filename : The name of the file to be opened
-        pType : The type of particle (1 for Dark Matter, 2 for Disk Star, 3 for Bulge Stars)
-        pNum : The number of the particle
+        filename : (string) The name of the file to be opened
+        pType : (float) The type of particle (1 for Dark Matter, 2 for Disk Star, 3 for Bulge Stars)
+        pNum : (int) The number of the particle
 
     Returns:
-        magDistance: The magnitude of the given particle's distance from the galactic center (in kpc)
-        magVelocity: The magnitude of the particle's total velocity (in km/s)
-        m: The mass of the particle (in M_sun)
+        magDistance: (astropy quantity) The magnitude of the given particle's distance from the galactic center (in kpc)
+        magVelocity: (astropy quantity) The magnitude of the particle's total velocity (in km/s)
+        m: (astropy quantity) The mass of the particle (in M_sun)
     """
     
     time, numP, data = Read("MW_000.txt") # gets the time, total number of particles, and data from the file
@@ -36,7 +36,7 @@ def ParticleInfo(filename, pType, pNum):
     vx, vy, vz = data['vx'][index], data['vy'][index], data['vz'][index] # gets the x, y, and z values of the particle
     
     m = m*10**10*u.M_sun # converts mass into correct solar mass units
-    x, y, z = x*u.kpc, y*u.kpc, z*u.kpc # gives units if kpc to x, y, z
+    x, y, z = x*u.kpc, y*u.kpc, z*u.kpc # gives units of kpc to x, y, z
     vx, vy, vz = vx*u.km/u.s, vy*u.km/u.s, vz*u.km/u.s # gives units of km/s to vx, vy, vz
     
     magDistance = np.around(np.sqrt(x**2 + y**2 + z**2), 3) # calculates the magnitude of the distance from galactic center
