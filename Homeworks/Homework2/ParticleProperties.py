@@ -21,8 +21,9 @@ def ParticleInfo(filename, pType, pNum):
         pNum : The number of the particle
 
     Returns:
-        
-
+        magDistance: The magnitude of the given particle's distance from the galactic center (in kpc)
+        magVelocity: The magnitude of the particle's total velocity (in km/s)
+        m: The mass of the particle (in M_sun)
     """
     
     time, numP, data = Read("MW_000.txt") # gets the time, total number of particles, and data from the file
