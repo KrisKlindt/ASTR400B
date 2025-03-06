@@ -69,7 +69,7 @@ def density_contour(xdata, ydata, nbins_x, nbins_y, ax=None, **contour_kwargs):
 
     """
 
-    H, xedges, yedges = np.histogram2d(xdata, ydata, bins=(nbins_x,nbins_y), normed=True)
+    H, xedges, yedges = np.histogram2d(xdata, ydata, bins=(nbins_x,nbins_y), density=True)
     # NOTE : if you are using the latest version of python, in the above: 
     # instead of normed=True, use density=True
     
@@ -90,13 +90,14 @@ def density_contour(xdata, ydata, nbins_x, nbins_y, ax=None, **contour_kwargs):
     three_sigma = so.brentq(find_confidence_interval, 0., 1., args=(pdf, 0.99))
     
     # You might need to add a few levels
-
+    Fiftypercent = so.brentq(find_confidence_interval, 0., 1., args=(pdf, 0.50))
+    Seventy5percent = so.brentq(find_confidence_interval, 0., 1., args=(pdf, 0.75))
 
     # Array of Contour levels. Adjust according to the above
-    levels = [one_sigma, two_sigma, three_sigma][::-1]
+    levels = [Fiftypercent, one_sigma, Seventy5percent, two_sigma, three_sigma][::-1]
     
     # contour level labels  Adjust accoding to the above.
-    strs = ['0.68','0.95', '0.99'][::-1]
+    strs = ['0.50','0.68','0.75','0.95', '0.99',][::-1]
 
     
     ###### 
@@ -183,6 +184,7 @@ cbar.set_label("Number of disk particle per bin", fontsize=15)
 # x pos, y pos, contour res, contour res, axis, colors for contours.
 # remember to adjust this if there are other contours added
 # density_contour(pos1, pos2, res1, res2, ax=ax, colors=[])
+density_contour(xD, yD, 80, 80, ax = ax, colors=['orange', 'green', 'red', 'blue', 'yellow'])
 
 
 
@@ -272,7 +274,7 @@ def RotateFrame(posI,velI):
 
 # ADD HERE
 # compute the rotated position and velocity vectors
-
+rn, vn = RotateFrame(r, v)
 
 
 
@@ -283,15 +285,15 @@ fig, ax= plt.subplots(figsize=(15, 10))
 
 # plot the particle density for M31 , 2D histogram
 # ADD HERE
-
+plt.hist2d(rn[:,0], rn[:,2], bins=150, norm=LogNorm(), cmap='magma')
 
 cbar = plt.colorbar()
 cbar.set_label("Number of disk particle per bin", fontsize=15)
 
 
 # Add axis labels
-plt.xlabel(' ', fontsize=22)
-plt.ylabel(' ', fontsize=22)
+plt.xlabel('x (kpc)', fontsize=22)
+plt.ylabel('z (kpc)', fontsize=22)
 
 #set axis limits
 plt.ylim(-10,10)
@@ -302,8 +304,10 @@ label_size = 22
 matplotlib.rcParams['xtick.labelsize'] = label_size 
 matplotlib.rcParams['ytick.labelsize'] = label_size
 
+density_contour(rn[:,0], rn[:,2], 80, 80, ax = ax, colors=['orange', 'green', 'red', 'blue', 'yellow'])
+
 # Save to a file
-#plt.savefig('Lab7_EdgeOn_Density.png')
+plt.savefig('Lab7_EdgeOn_Density.png')
 
 
 
@@ -315,6 +319,7 @@ fig, ax= plt.subplots(figsize=(12, 10))
 
 # plot the particle density for M31 
 # ADD HERE
+plt.hist2d(rn[:,0], rn[:,1], bins=150, norm=LogNorm(), cmap='magma')
 
 cbar = plt.colorbar()
 cbar.set_label("Number of disk particle per bin", fontsize=15)
@@ -324,8 +329,8 @@ cbar.set_label("Number of disk particle per bin", fontsize=15)
 # ADD HERE
 
 # Add axis labels
-plt.xlabel('  ', fontsize=22)
-plt.ylabel('  ', fontsize=22)
+plt.xlabel('x (kpc)', fontsize=22)
+plt.ylabel('y (kpc)', fontsize=22)
 
 #set axis limits
 plt.ylim(-40,40)
@@ -336,8 +341,10 @@ label_size = 22
 matplotlib.rcParams['xtick.labelsize'] = label_size 
 matplotlib.rcParams['ytick.labelsize'] = label_size
 
+density_contour(rn[:,0], rn[:,1], 80, 80, ax = ax, colors=['orange', 'green', 'red', 'blue', 'yellow'])
+
 # Save to a file 
-# plt.savefig('Lab7_FaceOn_Density.png')
+plt.savefig('Lab7_FaceOn_Density.png')
 
 
 # # Part C
@@ -355,15 +362,15 @@ ax = plt.subplot(111)
 # coded by velocity along the 3rd axis
 # plt.scatter(pos1, pos2, c=vel1)
 # ADD HERE 
-
+plt.scatter(rn[:,1], rn[:,2], c=vn[:,0])
 
 #colorbar
 cbar = plt.colorbar()
-cbar.set_label('  ', size=22)
+cbar.set_label('Vx (km/s)', size=22)
 
 # Add axis labels
-plt.xlabel('  ', fontsize=22)
-plt.ylabel('  ', fontsize=22)
+plt.xlabel('y (kpc)', fontsize=22)
+plt.ylabel('z (kpc)', fontsize=22)
 
 
 
@@ -377,11 +384,11 @@ plt.ylim(-10,10)
 plt.xlim(-40,40)
 
 # Save file
-# plt.savefig('Lab7_EdgeOn_Vel.png')
+plt.savefig('Lab7_EdgeOn_Vel.png')
 
 
 # b) Create a phase diagram for the edge on disk (Position vs. Velocity) using a 2D Histogram.
-# 
+
 # c) Use the MassProfile Code to overplot the expected circular velocity from the mass profile. 
 
 
@@ -394,16 +401,26 @@ ax = plt.subplot(111)
 
 # Plot 2D Histogram for one component of  Pos vs Vel 
 # ADD HERE
-
+plt.hist2d(rn[:,0], vn[:,1], bins=150, norm=LogNorm())
+plt.colorbar()
 
 # Overplot Circular Velocity from the MassProfile Code
 # ADD HERE
+# Create MassProfile object for M31 using homework solution
+M31 = MassProfile('M31', 0)
 
+# array of positions
+rr = np.arange(0.01, 45, 0.1)
 
+# Circular velocity profile
+Vcirc = M31.circularVelocityTotal(rr)
+
+plt.plot(rr, Vcirc, color = 'r')
+plt.plot(-rr, -Vcirc, color = 'r')
 
 # Add axis labels
-plt.xlabel(' ', fontsize=22)
-plt.ylabel(' ', fontsize=22)
+plt.xlabel('x (kpc)', fontsize=22)
+plt.ylabel('Vy (km/s)', fontsize=22)
 
 
 
@@ -415,7 +432,7 @@ matplotlib.rcParams['ytick.labelsize'] = label_size
 
 
 # Save file
-# plt.savefig('Lab7_RotationCurve.png')
+plt.savefig('Lab7_RotationCurve.png')
 
 
 # # Part D: Exploring Spiral Structure
@@ -424,8 +441,8 @@ matplotlib.rcParams['ytick.labelsize'] = label_size
 
 # Determine the positions of the disk particles in 
 # cylindrical coordinates. (like in Lab 6)
-
-
+cyl_r = np.sqrt(rn[:,0]**2 + rn[:,1]**2) # radial
+cyl_theta = np.arctan2(rn[:,1], rn[:,0])*180/np.pi # theta in degrees
 
 
 # Make a phase diagram of R vs Theta
@@ -435,14 +452,14 @@ ax = plt.subplot(111)
 
 # Plot 2D Histogram of r vs theta
 # ADD HERE
+plt.hist2d(cyl_r, cyl_theta, bins=150, norm=LogNorm())
+plt.colorbar()
 
-
-
-
+density_contour(cyl_r, cyl_theta, 80, 80, ax = ax, colors=['orange', 'pink', 'red', 'blue', 'yellow'])
 
 # Add axis labels
-plt.xlabel(' ', fontsize=22)
-plt.ylabel(' ', fontsize=22)
+plt.xlabel('R (kpc)', fontsize=22)
+plt.ylabel(r'$\theta$ (deg)', fontsize=22)
 
 
 
@@ -454,5 +471,5 @@ matplotlib.rcParams['ytick.labelsize'] = label_size
 
 
 # Save file
-# plt.savefig('Lab7_SpiralPhase.png')
+plt.savefig('Lab7_SpiralPhase.png')
 
