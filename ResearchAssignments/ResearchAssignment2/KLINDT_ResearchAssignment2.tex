@@ -1,0 +1,60 @@
+\documentclass[trackchanges]{aastex7}
+
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+
+
+\begin{document}
+
+\title{Tidal Transformations of M33 During the Merging of the Milky Way and M31}
+
+\author{Kris Klindt}
+\affiliation{University of Arizona}
+\email{kklindt@arizona.edu}
+
+
+\section{Introduction} 
+
+One way to measure the tidal transformations of a satellite galaxy is by the changes to the internal stellar kinematics of the satellite galaxy due to the tides from a massive host galaxy. For example, as the satellite galaxy orbits around its host, mass can be stripped away from it, resulting in a loss of mass that affects quantities like the rotation curve of the satellite galaxy. 
+
+This topic is important to our understanding of galaxy evolution for several reasons. One reason why the study of tidal transformations in satellite galaxies is important is that it gives us a better understanding of our local group of galaxies, in particular the satellites of the Milky Way and M31. These galaxies are made up of dwarf irregulars (disks, rotationally supported) and dwarf spheroidal (dispersion, no rotation) galaxies, and understanding the effects of tidal transformations on satellite galaxies can give us a connection between the two types of galaxies.
+
+A particular pattern that has been noticed is that most galaxies that are close to the Milky Way and M31 are either dwarf spheroidals (dSph’s) or dwarf ellipticals (dE's) and are mostly devoid of gas and supported by velocity dispersion \citep{Mayer2001}. Tidal transformations are a large factor as to why this is the case. The effect of mass being stripped on the rotation curve of satellite galaxies is also known. In their simulation of M33 and M31's most recent interaction, Semczuk et al. find the rotation curve shown in Figure \ref{M33RotationCurve}, which clearly demonstrates that the rotation curve of the satellite galaxy has a decrease in magnitude as the distance from the galaxy increases, since a lot of mass has been stripped from the satellite galaxy \citep{Semczuk2018}.
+
+\begin{figure}[ht!] \label{M33RotationCurve}
+\plotone{M33_RotationCurve.jpg}
+\caption{ This is the simulated rotation curve of M33 compared to the currently observed rotation curve.
+\label{fig:general}}
+\end{figure}
+
+One of the open questions related to this topic is how the evolution of satellite galaxies is affected by their hosts. One example of this can be seen in Pardy et al.'s paper that analyzes offset stellar disks \citep{Pardy2016}. They analyze how tidal transformations can shift photometric galaxy centers off from the galaxy's dynamical centers. The varied effects that tidal transformations can have on a satellite galaxy are not fully understood, and there are many potentially surprising effects that tidal transformations can have on the evolution of a satellite galaxy.
+
+\section{Proposal} \label{sec:style}
+
+\subsection{This Proposal}
+
+The specific question I will be answering using this simulation will be how M33's stellar rotation curve evolves as the Milky Way and M31 merge.
+
+\subsection{Methods}
+
+In order to do this, I will be using the steps outlined in Lab 7 in order to produce a phase diagram and rotation curve such as the one shown in Figure \ref{fig:Lab7}. I will make such a phase diagram for every 40 snapshots (corresponding to ~571 Myrs) of the VHighRes simulation and make a video to show how the phase diagram and rotation curve of M33 evolves with time. 
+
+\begin{figure}[ht!]
+\plotone{Lab7_RotationCurve.png}
+\caption{ This is the phase diagram, including the rotation curve (red line) that was gotten from Lab 7.
+\label{fig:Lab7}}
+\end{figure}
+
+The code I will need to write will be a loop that goes through each desired snapshot, determine positions and velocities of each disk particle relative to the center of mass, rotate the frame of these vectors so that the disk's angular momentum lines up with the z-axis, find the rotation curve of the galaxy using a MassProfile object, and finally plotting all of this onto a phase diagram and adding the diagram to a movie.
+
+
+\subsection{Hypothesis}
+
+I hypothesize that, as the Milky Way and M31 merge, some of the stars and dark matter particles will be torn from the outer edges of M33, causing the furthest (in distance) edges of the phase diagram to have lower velocities than initially, since there is less mass to sustain those high velocities. Also, I hypothesize that the velocities of the disk particles in M33 will be more random and will not give a nice pattern like what is seen in Figure \ref{fig:Lab7}, showing that M33 is more dispersion supported than rotationally supported.
+
+
+\bibliography{sample7}{}
+\bibliographystyle{aasjournalv7}
+
+\end{document}
