@@ -1,8 +1,11 @@
 
-
 # Homework 4
 # Center of Mass Position and Velocity
-#  Solutions: G. Besla, R. Li, H. Foote
+# Solutions: G.Besla, R. Li, H. Foote
+
+
+# remember this is just a template, you don't need to follow every step
+# if you have your own method to solve the homework, it is totally fine
 
 
 
@@ -90,17 +93,14 @@ class CenterOfMass:
 
         PARAMETERS
         ----------
-        delta : `float`
-            error tolerance in kpc. 
+        delta : `float, optional`
+            error tolerance in kpc. Default is 0.1 kpc
         
         RETURNS
         ----------
         p_COM : `np.ndarray of astropy.Quantity'
             3-D position of the center of mass in kpc
         '''                                                                     
-
-        # Center of Mass Position                                                                                      
-        ###########################                                                                                    
 
         # Try a first guess at the COM position by calling COMdefine                                                   
         x_COM, y_COM, z_COM = self.COMdefine(self.x, self.y, self.z, self.m)
@@ -212,13 +212,14 @@ class CenterOfMass:
         #the center of mass velocity                   
         rv_max = 15.0*u.kpc
 
-        # determine the position of all particles 
-        # relative to the center of mass position (x_COM, y_COM, z_COM)
+        # determine the position of all particles relative to the center of mass position (x_COM, y_COM, z_COM)
         # write your own code below
-        xV = self.x[:]*u.kpc - x_COM
-        yV = self.y[:]*u.kpc - y_COM
-        zV = self.z[:]*u.kpc - z_COM
-        rV = np.sqrt(xV**2 + yV**2 + zV**2)
+        # Note that x_COM, y_COM, z_COM are astropy quantities and you can only subtract one astropy quantity from another
+        # So, when determining the relative positions, assign the appropriate units to self.x
+        xV = self.x * u.kpc - x_COM
+        yV = self.y * u.kpc - y_COM
+        zV = self.z * u.kpc - z_COM
+        rV = np.sqrt(xV**2+yV**2+zV**2)
         
         # determine the index for those particles within the max radius
         # write your own code below
@@ -230,20 +231,20 @@ class CenterOfMass:
         vy_new = self.vy[indexV]
         vz_new = self.vz[indexV]
         m_new =  self.m[indexV]
-       
         
         # compute the center of mass velocity using those particles
         # write your own code below
-        vx_COM, vy_COM, vz_COM =   self.COMdefine(vx_new,vy_new,vz_new, m_new)
+        vx_COM, vy_COM, vz_COM = self.COMdefine(vx_new, vy_new, vz_new, m_new)
         
         # create an array to store the COM velocity
         # write your own code below
-        v_COM = np.array([vx_COM,vy_COM,vz_COM])
+        v_COM = np.array([np.round(vx_COM, 2), np.round(vy_COM, 2), np.round(vz_COM, 2)])
 
         # return the COM vector
-        # set the correct units using astropy
+        # set the correct units usint astropy
         # round all values
-        return np.round(v_COM, 2)*u.km/u.s
+        v_COM = v_COM * u.km / u.s                                                                                      
+        return v_COM
     
 """
 
@@ -251,55 +252,62 @@ class CenterOfMass:
 #######################
 if __name__ == '__main__' : 
 
-
-    # Create  a Center of mass object for the MW, M31 and M33                                                              
+    # Create a Center of mass object for the MW, M31 and M33
+    # below is an example of using the class for MW
     MW_COM = CenterOfMass("MW_000.txt", 2)
+
+
+    # below gives you an example of calling the class's functions
+    # MW:   store the position and velocity COM
+    MW_COM_p = MW_COM.COM_P(0.1)
+    #print("Milky Way: ")
+    #print(MW_COM_p)
+    MW_COM_v = MW_COM.COM_V(MW_COM_p[0], MW_COM_p[1], MW_COM_p[2])
+    #print(MW_COM_v)
+
+    # now write your own code to answer questions
     M31_COM = CenterOfMass("M31_000.txt", 2)
     M33_COM = CenterOfMass("M33_000.txt", 2)
-
-    # find and print the COM positions in phase-space for each galaxy
-
-    # MW 
-    MW_COM_p = MW_COM.COM_P(0.1)
-    MW_COM_v = MW_COM.COM_V(MW_COM_p[0],MW_COM_p[1],MW_COM_p[2])
-    print('MW COM xyz position:', MW_COM_p, 'and xyz velocity:', MW_COM_v)
-
-    # M31 
+    
+    #print("M31: ")
     M31_COM_p = M31_COM.COM_P(0.1)
-    M31_COM_v = M31_COM.COM_V(M31_COM_p[0],M31_COM_p[1],M31_COM_p[2])
-    print('M31 COM xyz position:', M31_COM_p, 'and xyz velocity:', M31_COM_v)
-
-    # M33 
+    #print(M31_COM_p)
+    M31_COM_v = M31_COM.COM_V(M31_COM_p[0], M31_COM_p[1], M31_COM_p[2])
+    #print(M31_COM_v)
+    
+    #print("M33: ")
     M33_COM_p = M33_COM.COM_P(0.1)
-    M33_COM_v = M33_COM.COM_V(M33_COM_p[0],M33_COM_p[1],M33_COM_p[2])
-    print('M33 COM xyz position:', M33_COM_p, 'and xyz velocity:', M33_COM_v)
-
-
-    # Q2 
-    # Determine the separation between the MW and M31                                                                      
-    MW_M31 = np.sqrt((M31_COM_p[0]-MW_COM_p[0])**2 + (M31_COM_p[1]-MW_COM_p[1])**2 + (M31_COM_p[2]-MW_COM_p[2])**2)
-    print("Separation between the MW and M31 =", np.round(MW_M31))
-
-    # Determine the relative velocity between the MW and M31                                                                      
-    vMW_M31 = np.sqrt((M31_COM_v[0]-MW_COM_v[0])**2 + (M31_COM_v[1]-MW_COM_v[1])**2 + (M31_COM_v[2]-MW_COM_v[2])**2)
-    print("Relative Velocity between the MW and M31 =", np.round(vMW_M31))
-
-
+    #print(M33_COM_p)
+    M33_COM_v = M33_COM.COM_V(M33_COM_p[0], M33_COM_p[1], M33_COM_p[2])
+    #print(M33_COM_v)
+    
+    # Q2
+    x_sep = MW_COM_p[0] - M31_COM_p[0] # x separation between MW and M31
+    y_sep = MW_COM_p[1] - M31_COM_p[1] # y separation between MW and M31
+    z_sep = MW_COM_p[2] - M31_COM_p[2] # z separation between MW and M31
+    MW_M31Separation = np.round(np.sqrt(x_sep**2+y_sep**2+z_sep**2), 3) # magnitute of total separation
+    
+    #print(MW_M31Separation)
+    
+    vx_diff = MW_COM_v[0] - M31_COM_v[0] # vx difference between MW and M31
+    vy_diff = MW_COM_v[1] - M31_COM_v[1] # vy difference between MW and M31
+    vz_diff = MW_COM_v[2] - M31_COM_v[2] # vz difference between MW and M31
+    MW_M31Velocity = np.round(np.sqrt(vx_diff**2+vy_diff**2+vz_diff**2), 3) # magnitute of total velocity between the two
+    
+    #print(MW_M31Velocity)
+    
     # Q3
-    # Determine the relative position between M33 and M31                                                                  
-    M33_M31 = np.sqrt((M33_COM_p[0]-M31_COM_p[0])**2 + (M33_COM_p[1]-M31_COM_p[1])**2 + (M33_COM_p[2]-M31_COM_p[2])**2)
-    print("Relative Position between M33 and M31 = ", np.round(M33_M31))
-
-
-    # Determine the relative velocity between M33 and M31                                                                  
-    vM33_M31 = np.sqrt((M33_COM_v[0]-M31_COM_v[0])**2 + (M33_COM_v[1]-M31_COM_v[1])**2 + (M33_COM_v[2]-M31_COM_v[2])**2)
-    print("Relative Velocity between M33 and M31 = ", np.round(vM33_M31))
-
-
-    # Q4:  The iterative procedue is necessary because as galaxies interact their stars get thrown to large radii with different speeds. Tidal tails are not spherically symmetric; this can cause the COM position calculation to be really off if you are using all the particles at large radii. 
-
+    x2_sep = M33_COM_p[0] - M31_COM_p[0] # x separation between M33 and M31
+    y2_sep = M33_COM_p[1] - M31_COM_p[1] # y separation between M33 and M31
+    z2_sep = M33_COM_p[2] - M31_COM_p[2] # z separation between M33 and M31
+    M33_M31Separation = np.round(np.sqrt(x2_sep**2+y2_sep**2+z2_sep**2), 3) # magnitute of total separation
+    
+    print(M33_M31Separation)
+    
+    vx2_diff = M33_COM_v[0] - M31_COM_v[0] # vx difference between M33 and M31
+    vy2_diff = M33_COM_v[1] - M31_COM_v[1] # vy difference between M33 and M31
+    vz2_diff = M33_COM_v[2] - M31_COM_v[2] # vz difference between M33 and M31
+    M33_M31Velocity = np.round(np.sqrt(vx2_diff**2+vy2_diff**2+vz2_diff**2), 3) # magnitute of total velocity between the two
+    
+    print(M33_M31Velocity)
 """
-
-
-
-
