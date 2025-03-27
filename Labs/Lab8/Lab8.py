@@ -56,7 +56,6 @@ def StarFormationRate(L, Type, TIR=0):
         TIRc = 0
     else:
         print("Missing the wavelength, was expecting FUV, NUV, Halpha, TIR")
-        return
         
     # Correct the Luminosity for dust using the TIR
     Lcorr = L + TIRc*TIR
@@ -89,7 +88,7 @@ TIR_WLM = 2.48e6*LsunErgS + 3.21e5*LsunErgS + 2.49e6*LsunErgS
 # TIR = NIR + MIR + FIR
 
 # Test
-StarFormationRate(1e6*LsunErgS, 'blah')
+#StarFormationRate(1e6*LsunErgS, 'blah')
 print(StarFormationRate(NUV_WLM, 'NUV', TIR_WLM))
 
 # # Part B Star formation main sequence
@@ -141,21 +140,23 @@ def SFRMainSequence(Mstar, z):
 
 
 
-# MW at z=0
+# MW stellar mass (disk) at z=0
+MWmstar = 7.5e10
 
-
-
+#SFR for a MW type galaxy
+print(SFRMainSequence(MWmstar, 0))
+print(10**SFRMainSequence(MWmstar, 0))
 
 # MW at z = 1
-
+print(SFRMainSequence(MWmstar, 1))
+print(10**SFRMainSequence(MWmstar, 1))
 
 # # Step 3
 
 
 
 # create an array of stellar masses
-
-
+Mass = np.linspace(1e8, 1e12)
 
 
 
@@ -163,7 +164,13 @@ fig = plt.figure(figsize=(8,8), dpi=500)
 ax = plt.subplot(111)
 
 # add log log plots
-
+plt.plot(np.log10(Mass), SFRMainSequence(Mass, 0), color = 'b', linewidth = 3, label = "z = 0")
+plt.plot(np.log10(Mass), SFRMainSequence(Mass, 1), color = 'r', linewidth = 3, label = "z = 1", 
+         linestyle = ":")
+plt.plot(np.log10(Mass), SFRMainSequence(Mass, 2), color = 'purple', linewidth = 3, label = "z = 2", 
+         linestyle = "--")
+plt.plot(np.log10(Mass), SFRMainSequence(Mass, 3), color = 'g', linewidth = 3, label = "z = 3",
+         linestyle = "-.")
 
 # Add axis labels
 plt.xlabel('Log(Mstar (M$_\odot$))', fontsize=12)
@@ -180,12 +187,13 @@ legend = ax.legend(loc='upper left',fontsize='x-large')
 
 
 # Save file
-#plt.savefig('Lab8_SFR_MainSequence.png')
+plt.savefig('Lab8_SFR_MainSequence.png')
 
 
 # # Part C  Starbursts
 # 
-# Use your `StarFormationRate` code to determine the typical star formation rates for the following systems with the listed Total Infrared Luminosities (TIR): 
+# Use your `StarFormationRate` code to determine the typical star formation rates for the 
+# following systems with the listed Total Infrared Luminosities (TIR): 
 # 
 # Normal Galaxies: $10^{10}$ L$_\odot$
 # 
@@ -198,8 +206,8 @@ legend = ax.legend(loc='upper left',fontsize='x-large')
 
 
 # normal galaxies 
-
-
+TIR_Normal = 1e10 * LsunErgS
+print(10**StarFormationRate(TIR_Normal, "TIR"))
 
 
 # LIRGs  
@@ -213,8 +221,8 @@ legend = ax.legend(loc='upper left',fontsize='x-large')
 
 
 # HLIRGs
-
-
+TIR_HLIRG = 1e13 * LsunErgS
+print(10**StarFormationRate(TIR_HLIRG, "TIR"))
 
 
 
