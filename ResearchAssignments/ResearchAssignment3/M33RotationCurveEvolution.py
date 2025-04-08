@@ -195,19 +195,27 @@ def separation(filename1, filename2):
     
     
 # calculate total masses for M33, M31, Milky Way
-massM33 = galaxyTotalMass("M33_000.txt") # change to highRes later
-massM31 = galaxyTotalMass("M31_000.txt")
-massMW = galaxyTotalMass("MW_000.txt")
+massM33 = galaxyTotalMass("M33/M33_000.txt") # change to highRes later
+massM31 = galaxyTotalMass("M31/M31_000.txt")
+massMW = galaxyTotalMass("MW/MW_000.txt")
 
 massMerged = massM31 + massMW
 
 # calculate Jacobi Radii for each snapshot
 # M31 alone is the host 
-rj1 = jacobiRadius(massM33, massM31, separation("M33_000.txt", "M31_000.txt")) # change to highRes later
+rj1 = jacobiRadius(massM33, massM31, separation("M33/M33_000.txt", "M31/M31_000.txt")) # change to highRes later
+rj2 = jacobiRadius(massM33, massM31, separation("M33/M33_065.txt", "M31/M31_065.txt"))
+rj3 = jacobiRadius(massM33, massM31, separation("M33/M33_190.txt", "M31/M31_190.txt"))
+rj4 = jacobiRadius(massM33, massM31, separation("M33/M33_300.txt", "M31/M31_300.txt"))
+rj5 = jacobiRadius(massM33, massM31, separation("M33/M33_380.txt", "M31/M31_380.txt"))
+rj6 = jacobiRadius(massM33, massM31, separation("M33/M33_420.txt", "M31/M31_420.txt"))
 
 # M31, MW have merged, treat as one big host
-# Since they are merged, COM of one = COM of other
-rj7 = jacobiRadius(massM33, massMerged, separation("M33_475.txt", "M31_475.txt"))
+# Since MW, M31 are merged, COM of one = COM of other
+rj7 = jacobiRadius(massM33, massMerged, separation("M33/M33_475.txt", "M31/M31_475.txt"))
+rj8 = jacobiRadius(massM33, massMerged, separation("M33/M33_525.txt", "M31/M31_525.txt"))
+rj9 = jacobiRadius(massM33, massMerged, separation("M33/M33_580.txt", "M31/M31_580.txt"))
+rj10 = jacobiRadius(massM33, massMerged, separation("M33/M33_625.txt", "M31/M31_625.txt"))
 
 # Create an array to hold positions + rotation curves to loop through later
 curves = np.zeros(2,10)
@@ -217,10 +225,48 @@ rr1, rC1 = rotationCurve(0, rj1)
 curves[0][0] = rr1
 curves[1][0] = rC1
 
+rr2, rC2 = rotationCurve(65, rj2)
+curves[0][1] = rr2
+curves[1][1] = rC2
+
+rr3, rC3 = rotationCurve(190, rj3)
+curves[0][2] = rr3
+curves[1][2] = rC3
+
+rr4, rC4 = rotationCurve(300, rj4)
+curves[0][3] = rr4
+curves[1][3] = rC4
+
+rr5, rC5 = rotationCurve(380, rj5)
+curves[0][4] = rr5
+curves[1][4] = rC5
+
+rr6, rC6 = rotationCurve(420, rj6)
+curves[0][5] = rr6
+curves[1][5] = rC6
+
+rr7, rC7 = rotationCurve(475, rj7)
+curves[0][6] = rr7
+curves[1][6] = rC7
+
+rr8, rC8 = rotationCurve(525, rj8)
+curves[0][7] = rr8
+curves[1][7] = rC8
+
+rr9, rC9 = rotationCurve(580, rj9)
+curves[0][8] = rr9
+curves[1][8] = rC9
+
+rr10, rC10 = rotationCurve(625, rj10)
+curves[0][0] = rr10
+curves[1][0] = rC10
+
 # create array for time of each snapshot
 sToT = 10/0.7/1000 # so T is in Gyrs
 times = np.array([0, 65 * sToT, 190 * sToT, 300 * sToT, 380 * sToT, 420 * sToT, 475 * sToT,
                   525 * sToT, 580 * sToT, 625 * sToT])
+
+# 
 
 
 # Create plot
@@ -244,3 +290,5 @@ matplotlib.rcParams['ytick.labelsize'] = label_size
 
 # Save file
 plt.savefig('M33_RotationCurveEvolution.png')
+
+
