@@ -1,0 +1,68 @@
+\documentclass[trackchanges, twocolumn]{aastex7}
+
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+
+
+\begin{document}
+
+\title{Tidal Transformations of M33 During the Merging of the Milky Way and M31}
+
+\author{Kris Klindt}
+\affiliation{University of Arizona}
+\email{kklindt@arizona.edu}
+
+\keywords{Local Group, Jacobi Radius, Tidal Stripping/Sharing, Satellite Galaxy, Rotation Curve}
+
+\section{Introduction} 
+
+Tidal transformations are an important factor in galaxy evolution, especially for satellite galaxies. One way to measure the tidal transformations of a satellite galaxy is by the changes to the internal stellar kinematics of the satellite galaxy due to the tides from a massive host galaxy. For example, as the satellite galaxy orbits around its host, mass can be stripped away from it, resulting in a loss of mass that affects quantities like the rotation curve of the satellite galaxy. 
+
+In order to understand why tidal transformations are an important topic, one must know what galaxies and galaxy evolution are. According to Willman \& Strader, a \textbf{galaxy} is "a gravitationally bound set of stars whose properties cannot be explained by a combination of baryons (gas, dust, and stars) and Newton's laws of gravity" \citep{Willman2012}. \textbf{Galaxy evolution} is how the properties of a galaxy, such as color, brightness, size, and structure change with time, and why these changes occur. Tidal transformations are an important topic to our understanding of galaxy evolution for several reasons. One reason why the study of tidal transformations in satellite galaxies is important is that it gives us a better understanding of our local group of galaxies, in particular the satellites of the Milky Way and M31. These galaxies are made up of dwarf irregulars (disks, rotationally supported) and dwarf spheroidal (dispersion, no rotation) galaxies, and understanding the effects of tidal transformations on satellite galaxies can give us a connection between the two types of galaxies.
+
+A particular pattern that has been noticed within the Local Group is that most galaxies that are close to the Milky Way and M31 are either dwarf spheroidals (dSph’s) or dwarf ellipticals (dE's) and are mostly devoid of gas and supported by velocity dispersion \citep{Mayer2001}. Tidal transformations are a large factor as to why this is the case. The effect of mass being stripped on the rotation curve of satellite galaxies is also known. In their simulation of M33 and M31's most recent interaction, Semczuk et al. find the rotation curve shown in Figure \ref{M33RotationCurve}, which clearly demonstrates that the rotation curve of the satellite galaxy has a decrease in magnitude as the distance from the galaxy increases, since a lot of mass has been stripped from the satellite galaxy \citep{Semczuk2018}.
+
+\begin{figure}[ht!] \label{M33RotationCurve}
+\plotone{M33_RotationCurve.jpg}
+\caption{ This is the simulated rotation curve of M33 (red, blue, and green lines) compared to the currently observed rotation curve (black line). This demonstrates that the rotation curve of the satellite galaxy has a decrease in magnitude as the distance from the galaxy increases \citep{Semczuk2018}.
+\label{fig:general}}
+\end{figure}
+
+One of the open questions related to this topic is how the evolution of satellite galaxies is affected by their hosts. One example of this can be seen in Pardy et al.'s paper that analyzes offset stellar disks \citep{Pardy2016}. They analyze how tidal transformations can shift photometric galaxy centers off from the galaxy's dynamical centers. The varied effects that tidal transformations can have on a satellite galaxy are not fully understood, and there are many potentially surprising effects that tidal transformations can have on the evolution of a satellite galaxy.
+
+\section{This Project} \label{sec:style}
+
+The specific question I will be answering in this project will be how M33's analytical stellar rotation curve and mean stellar circular velocity evolve as the Milky Way and M31 merge.
+
+This project will be addressing the question of how the evolution of satellite galaxies is affected by their hosts, including how the size of the host can change the affect on the satellite galaxy's evolution.
+
+Many of the galaxies within our Local Group are satellite galaxies, and we can see that most galaxies that are close to the Milky Way and M31 are either dSph's or dE's \citep{Mayer2001}. This study aims to test if M33, which is currently a dwarf irregular, will evolve into a dSph due to tidal transformations from M31 and the Milky Way.
+\newline
+\section{Methodology}
+
+I will be using the N-body simulation of the merging of the Milky and M31 that includes M33 that is used in \cite{MarelBesla2012}. An N-body simulation uses many (in this case, hundreds of thousands) point masses representing stars and dark matter and calculates the gravitational interactions between all those point masses in order to simulate how the galaxies evolve. The initial model of each galaxy uses a Hernquist profile \citep{Hernquist1990} for the dark matter halo, while the stellar bulge and disk of the simulation were modeled to match the surface-brightness profiles of each component of each galaxy. 
+
+I will be using the VHighRes simulation to show how the rotation curve of M33 evolves with time. I will need to use all particle types in order to calculate the analytical rotation curve such as in Figure \ref{fig:M33Evo}, and for the mean circular velocity, I will be using the disk particles.
+
+\begin{figure}[ht!]
+\plotone{M33_RotationCurveEvolution.png}
+\caption{ This shows the analytical rotation curve of M33 within the Jacobi radius that is calculated for each pericenter and apocenter, as well as what time this rotation curve is calculated relative to the start of the simulation. This is a draft for what the final result of this project should be.
+\label{fig:M33Evo}}
+\end{figure}
+
+The code I will need to write will calculate the Jacobi radius of M33 using the equation: 
+\(r_j = r*(M_{sat}/2M_{host})\),
+where r is the distance between the centers of mass of M33 and M31 (kpc), \(M_{sat}\) is the mass of the satellite galaxy M33 (\(M_\odot\)), and \(M_{host}\) is the mass of the host galaxy, which will be either M31 or the combined Milky Way and M31 after they merge (\(M_\odot\)). I will find the analytical rotation curve for M33 within the Jacobi radius using the equation:
+\(V_c^2=GM/r\),
+where r is the galactocentric radius (kpc) and M is the mass of the galaxy enclosed within that radius (\(M_\odot\)). I will also need to convert the velocity to cylindrical coordinates in order to find the mean circular velocity \(v_\phi\) within a radial bin of 0.5 kpc going out to the Jacobi radius using the equations \(\rho=\sqrt{x^2+y^2}\) and \(v_\phi=(xv_y-yv_x)/\rho\), where x and y are the x and y components of each particle's distance from the center of mass of M33 (kpc) and \(v_x\) and \(v_y\) are the x and y components of the velocity of the particle. These directions will all be in a rotated frame, which is rotated so that the z-axis aligns with the disk's angular momentum.
+
+In order to study how M33 evolves as the Milky Way and M31 merge, I will be using the steps outlined in Lab 7 in order to produce an analytical rotation curve for several pericenters and apocenters of M33's orbit around M31 and the combined Milky Way-M31 system such as what is shown in Figure \ref{fig:Lab7}. I will also calculate the mean circular velocity of the stars to create a similar rotation curve, but one that will show how the stars are actually being affected rather than an analytical solution. These will give an idea of how M33 loses mass as it orbits M31 as well as whether M33 is supported by rotation or by dispersion, which tells if it stays a dwarf irregular or becomes a dwarf spheroidal as the Milky Way and M31 merge.
+
+I hypothesize that, as the Milky Way and M31 merge, some of the stars and dark matter particles will be torn from the outer edges of M33, causing the furthest (in distance) edges of the phase diagram to have lower velocities than initially, since there is less mass to sustain those high velocities. Also, I hypothesize that the velocities of the disk particles in M33 will be more random and will not give a recognizable pattern like what is seen in Figure \ref{fig:Lab7}, showing that M33 is more dispersion supported than rotationally supported. I believe this will happen because of the pattern that galaxies close to the Milky Way and M31 are dwarf spheroidal or dwarf ellipticals, which are dispersion supported, since M33's orbital distance decreases as the Milky Way and M31 merge.
+
+
+\bibliography{sample7}{}
+\bibliographystyle{aasjournalv7}
+
+\end{document}
